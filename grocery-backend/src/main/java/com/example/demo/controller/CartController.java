@@ -12,6 +12,7 @@ import java.util.List;
 public class CartController {
     private static final List<GroceryItem> inventory = new ArrayList<>();
     private final List<GroceryItem> cart = new ArrayList<>();
+    private final List<Order> orderHistory = new ArrayList<>();
     private Order lastOrder;
 
     static {
@@ -37,10 +38,15 @@ public class CartController {
         return cart;
     }
 
+    public static class CheckoutRequest {
+        public String pickupOrDelivery;
+    }
+
     @PostMapping("/checkout")
-    public Order checkout() {
+    public Order checkout(@RequestBody CheckoutRequest req) {
         double total = cart.stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum();
-        lastOrder = new Order(new ArrayList<>(cart), total, false);
+        lastOrder = new Order(new ArrayList<>(cart), total, false, req != null && req.pickupOrDelivery != null ? req.pickupOrDelivery : "pickup");
+        orderHistory.add(lastOrder);
         cart.clear();
         return lastOrder;
     }
@@ -56,6 +62,14 @@ public class CartController {
 
     @GetMapping("/order")
     public Order viewLastOrder() {
-        return lastOrder;
+        if (!orderHistory.isEmpty()) {
+            return orderHistory.get(orderHistory.size() - 1);
+        }
+        return null;
+    }
+
+    @GetMapping("/history")
+    public List<Order> getOrderHistory() {
+        return orderHistory;
     }
 }

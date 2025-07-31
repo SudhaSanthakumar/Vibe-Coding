@@ -5,6 +5,9 @@ function App() {
   const [inventory, setInventory] = useState([]);
   const [cart, setCart] = useState([]);
   const [order, setOrder] = useState(null);
+  const [orderHistory, setOrderHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [pickupOrDelivery, setPickupOrDelivery] = useState('pickup');
   const [message, setMessage] = useState('');
   const [quantities, setQuantities] = useState({});
 
@@ -19,6 +22,12 @@ function App() {
       .then(res => res.json())
       .then(data => setCart(data));
   }, []);
+
+  const fetchOrderHistory = () => {
+    fetch(`${BASE_URL}/history`)
+      .then(res => res.json())
+      .then(data => setOrderHistory(data));
+  };
 
   const addToCart = (item) => {
     const quantity = parseInt(quantities[item.name]) || 1;
@@ -46,7 +55,11 @@ function App() {
   };
 
   const checkout = () => {
-    fetch(`${BASE_URL}/checkout`, { method: 'POST' })
+    fetch(`${BASE_URL}/checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pickupOrDelivery })
+    })
       .then(res => res.json())
       .then(data => {
         setOrder(data);
@@ -98,6 +111,14 @@ function App() {
       </table>
 
       <h2>Cart</h2>
+      <div style={{marginBottom:'1em'}}>
+        <label>
+          <input type="radio" name="pickupOrDelivery" value="pickup" checked={pickupOrDelivery === 'pickup'} onChange={() => setPickupOrDelivery('pickup')} /> Pickup
+        </label>
+        <label style={{marginLeft:'1.5em'}}>
+          <input type="radio" name="pickupOrDelivery" value="delivery" checked={pickupOrDelivery === 'delivery'} onChange={() => setPickupOrDelivery('delivery')} /> Delivery
+        </label>
+      </div>
       {cart.length === 0 ? <p>Cart is empty.</p> : (
         <table>
           <thead>
@@ -119,6 +140,8 @@ function App() {
       {order && (
         <div style={{marginTop: '2em'}}>
           <h2>Order Summary</h2>
+          <p><strong>Order ID:</strong> {order.orderId}</p>
+          <p><strong>Type:</strong> {order.pickupOrDelivery ? order.pickupOrDelivery.charAt(0).toUpperCase() + order.pickupOrDelivery.slice(1) : ''}</p>
           <table>
             <thead>
               <tr><th>Name</th><th>Price</th><th>Quantity</th></tr>
@@ -136,6 +159,40 @@ function App() {
           <p><strong>Total: ${order.total}</strong></p>
           <p>Status: {order.paid ? 'Paid' : 'Not Paid'}</p>
           {!order.paid && <button onClick={pay}>Pay Now</button>}
+        </div>
+      )}
+
+      <button style={{marginTop:'2em'}} onClick={() => { setShowHistory(h => !h); if (!showHistory) fetchOrderHistory(); }}>
+        {showHistory ? 'Hide Order History' : 'View Order History'}
+      </button>
+
+      {showHistory && (
+        <div style={{marginTop:'1em'}}>
+          <h2>Order History</h2>
+          {orderHistory.length === 0 ? <p>No orders yet.</p> : (
+            <table>
+              <thead>
+                <tr><th>Order ID</th><th>Type</th><th>Status</th><th>Total</th><th>Items</th></tr>
+              </thead>
+              <tbody>
+                {orderHistory.map((ord, idx) => (
+                  <tr key={ord.orderId || idx}>
+                    <td>{ord.orderId}</td>
+                    <td>{ord.pickupOrDelivery ? ord.pickupOrDelivery.charAt(0).toUpperCase() + ord.pickupOrDelivery.slice(1) : ''}</td>
+                    <td>{ord.paid ? 'Paid' : 'Not Paid'}</td>
+                    <td>${ord.total}</td>
+                    <td>
+                      <ul style={{margin:0, paddingLeft:18}}>
+                        {ord.items.map((item, i) => (
+                          <li key={i}>{item.name} x {item.quantity}</li>
+                        ))}
+                      </ul>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       )}
 
