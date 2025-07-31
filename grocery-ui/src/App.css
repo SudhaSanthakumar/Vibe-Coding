@@ -1,0 +1,137 @@
+.Appbody {
+  background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+}
+
+.App {
+  max-width: 900px;
+  margin: 2.5em auto;
+  background: #fff;
+  padding: 2.5em 2em 2em 2em;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(80, 112, 255, 0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+}
+
+h1 {
+  text-align: center;
+  color: #4f46e5;
+  margin-bottom: 0.7em;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+h2 {
+  color: #6366f1;
+  margin-bottom: 0.5em;
+  margin-top: 2em;
+  font-weight: 700;
+}
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 1.5em;
+  background: #f9fafb;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.04);
+}
+th, td {
+  padding: 12px 14px;
+  text-align: left;
+}
+th {
+  background: #6366f1;
+  color: #fff;
+  font-weight: 600;
+  border-bottom: 2px solid #a5b4fc;
+}
+td {
+  border-bottom: 1px solid #e5e7eb;
+}
+tr:last-child td {
+  border-bottom: none;
+}
+tr:hover {
+  background: #eef2ff;
+  transition: background 0.2s;
+}
+button {
+  background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+  color: #fff;
+  border: none;
+  padding: 7px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  box-shadow: 0 1.5px 4px rgba(99,102,241,0.10);
+  transition: background 0.2s, transform 0.1s;
+}
+button:hover:not(:disabled) {
+  background: linear-gradient(90deg, #818cf8 0%, #38bdf8 100%);
+  transform: translateY(-2px) scale(1.04);
+}
+button:disabled {
+  background: #c7d2fe;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* Message and card styling */
+.message {
+  margin-top: 1.5em;
+  padding: 1em 1.5em;
+  background: #e0f2fe;
+  color: #0369a1;
+  border-left: 5px solid #38bdf8;
+  border-radius: 6px;
+  font-size: 1.1em;
+}
+.order-summary {
+  background: #f1f5f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.04);
+  padding: 1.5em;
+  margin-top: 1em;
+}
+.cart-empty {
+  color: #64748b;
+  font-style: italic;
+  margin-bottom: 1em;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
